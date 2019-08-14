@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>carFabricChain</title>
+    <script src="jquery-3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>
+    <div>
+        <div>
+            ID:<input type="text" name="ID" id="ID">
+            Color:<input type="text" name="Color" id="Color">
+            Price:<input type="text" name="Price" id="Price">
+            LaunchDate:<input type="text" name="LaunchDate" id="LaunchDate">
+            <input type="button" value="数据上链" id="carBtn">
+        </div>
+    </div>
+
+    <div>
+        <h2>query information--Car信息查询</h2>
+        <div>
+            <h4>query car state--状态查询（couchdb存储状态/couchdb缓存）</h4>
+            CarID:<input type="text" name="queryID" id="queryID">
+            <input type="button" value="查询" id="queryBtn">
+        </div>
+        <div>
+            <h4>query by group--分组查询</h4>
+            Color:<input type="text" name="queryColor" id="queryColor">
+            <input type="button" value="分组查询" id="groupBtn">
+        </div>
+        <div>
+            <h4>query car history--历史查询</h4>
+            CarID:<input type="text" name="historyID" id="historyID">
+            <input type="button" value="历史查询" id="historyBtn">
+        </div>
+        <div>
+            <h4>query by Keys--范围查询</h4>
+            CarID1:<input type="text" name="key1ID" id="key1ID">
+            CarID2:<input type="text" name="key2ID" id="key2ID">
+            <input type="button" value="范围查询" id="keysBtn">
+        </div>
+        <div>
+            <h4>query like--模糊查询</h4>
+            CarID:<input type="text" name="likeID" id="likeID">
+            <input type="button" value="模糊查询" id="likeBtn">
+        </div>
+    </div>
+    <div>
+        <h2>query block information--区块信息查询</h2>
+        <div>
+            <h4>query chain--区块链信息</h4>
+            <input type="button" value="区块链查询" id="queryChainBtn">
+        </div>
+        <div>
+            <h4>query block--区块信息</h4>
+            blockNum:<input type="text" name="blockNum" id="blockNum">
+            <input type="button" value="区块查询" id="blockNumBtn">
+        </div>
+        <div>
+            <h4>query tx--交易信息</h4>
+            tx:<input type="text" name="tx" id="tx">
+            <input type="button" value="交易查询" id="txBtn">
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        $("#carBtn").click(function(){
+
+            var Color = $("#Color").val();
+            var ID =  $("#ID").val();
+            var Price =  $("#Price").val();
+            var LaunchDate =  $("#LaunchDate").val();
+
+            console.log(ID +" " + Color+" "+Price+" "+LaunchDate);
+
+            $.ajax({
+                type: "POST",
+                url: "http://0.0.0.0:5988/chain/invoke/",
+                contentType: "application/json;charset=utf-8",
+                data:JSON.stringify({"Color":Color,"ID":ID,"Price":Price,"LaunchDate":LaunchDate}),
+                dataType: "json",
+                success:function (message) {
+                    console.log("come to result success"+JSON.stringify(message));
+                    alert("提交成功"+JSON.stringify(message));
+                },
+                error:function (message) {
+                    alert("提交失败"+JSON.stringify(message));
+                }
+            });
+
+            console.log("come to end");
+
+        });
+        $("#groupBtn").click(function(){
+
+            var Color = $("#queryColor").val();
+
+
+            console.log(Color);
+
+            $.ajax({
+                type: "POST",
+                url: "http://0.0.0.0:5988/chain/queryGroup/",
+                contentType: "application/json;charset=utf-8",
+                data:JSON.stringify({"Color":Color}),
+                dataType: "json",
+                success:function (message) {
+                    console.log("come to result success");
+                    alert("查询成功"+JSON.stringify(message));
+                },
+                error:function (message) {
+                    alert("查询失败"+JSON.stringify(message));
+                }
+            });
+
+            console.log("come to end");
+
+        });
+        $("#queryBtn").click(function(){
+
+            var CarID = $("#queryID").val();
+
+
+            console.log(CarID);
+
+            $.ajax({
+                type: "POST",
+                url: "http://0.0.0.0:5988/chain/query/",
+                contentType: "application/json;charset=utf-8",
+                data:JSON.stringify({"ID":CarID}),
+                dataType: "json",
+                success:function (message) {
+                    console.log("come to result success");
+                    alert("查询成功"+JSON.stringify(message));
+                },
+                error:function (message) {
+                    alert("查询失败"+JSON.stringify(message));
+                }
+            });
+
+            console.log("come to end");
+
+        });
+        $("#historyBtn").click(function(){
+
+            var CarID = $("#historyID").val();
+
+
+            console.log(CarID);
+
+            $.ajax({
+                type: "GET",
+                url: "http://0.0.0.0:5988/chain/queryWithBlock/"+CarID,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success:function (message) {
+                    console.log("come to result success");
+                    alert("获取成功"+JSON.stringify(message));
+                },
+                error:function (message) {
+                    alert("获取失败"+JSON.stringify(message));
+                }
+            });
+            console.log("come to end");
+
+        });
+        $("#likeBtn").click(function(){
+
+            var CarLikeID = $("#likeID").val();
+
+            console.log(CarLikeID);
+
+            $.ajax({
+                type: "POST",
+                url: "http://0.0.0.0:5988/chain/queryLike/",
+                contentType: "application/json;charset=utf-8",
+                data:JSON.stringify({"ID":CarLikeID}),
+                dataType: "json",
+                success:function (message) {
+                    console.log("come to result success");
+                    alert("查询成功"+JSON.stringify(message));
+                },
+                error:function (message) {
+                    alert("查询失败"+JSON.stringify(message));
+                }
+            });
+
+            console.log("come to end");
+
+        });
+        $("#keysBtn").click(function(){
+
+            var CarKey1 = $("#key1ID").val();
+            var CarKey2 = $("#key2ID").val();
+
+            console.log(CarKey1+"---"+CarKey2);
+
+            $.ajax({
+                type: "POST",
+                url: "http://0.0.0.0:5988/chain/queryRange/",
+                contentType: "application/json;charset=utf-8",
+                data:JSON.stringify({"Args":[CarKey1,CarKey2]}),
+                dataType: "json",
+                success:function (message) {
+                    console.log("come to result success");
+                    alert("查询成功"+JSON.stringify(message));
+                },
+                error:function (message) {
+                    alert("查询失败"+JSON.stringify(message));
+                }
+            });
+
+            console.log("come to end");
+
+        });
+        $("#queryChainBtn").click(function(){
+            $.ajax({
+                type: "GET",
+                url: "http://0.0.0.0:5988/chain",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success:function (message) {
+                    console.log("come to result success");
+                    alert("获取成功"+JSON.stringify(message));
+                },
+                error:function (message) {
+                    alert("获取失败"+JSON.stringify(message));
+                }
+            });
+            console.log("come to end");
+
+        });
+        $("#blockNumBtn").click(function(){
+
+            var blockNum = $("#blockNum").val();
+
+
+            console.log(blockNum);
+
+            $.ajax({
+                type: "GET",
+                url: "http://0.0.0.0:5988/chain/blocks/"+blockNum,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success:function (message) {
+                    console.log("come to result success");
+                    alert("获取成功"+JSON.stringify(message));
+                },
+                error:function (message) {
+                    alert("获取失败"+JSON.stringify(message));
+                }
+            });
+            console.log("come to end");
+
+        });
+        $("#txBtn").click(function(){
+
+            var tx = $("#tx").val();
+
+
+            console.log(tx);
+
+            $.ajax({
+                type: "GET",
+                url: "http://0.0.0.0:5988/chain/transactions/"+tx,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success:function (message) {
+                    console.log("come to result success");
+                    alert("获取成功"+JSON.stringify(message));
+                },
+                error:function (message) {
+                    alert("获取失败"+JSON.stringify(message));
+                }
+            });
+            console.log("come to end");
+
+        });
+    </script>
+
+</body>
+
+
+
+
+
+
+
+</html>

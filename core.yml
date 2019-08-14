@@ -1,0 +1,29 @@
+#App section
+
+spi:
+
+    rest:
+        address:  0.0.0.0:5988
+        cacheAddress: 0.0.0.0:12984
+
+    goMaxProcs: -1
+
+    logging:
+        level:  info
+        format: '%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}'
+        prefix: spi_
+
+    chaincode:
+        path: chaincode
+        name: cc
+        version:  v0
+
+    sdk:
+        configPath: fixtures/config/sdknet_dev.yaml
+        localEntityMatcher: fixtures/config/local_entity_matchers.yaml
+        orgs: [Org1,Org2]
+        users:  [User1,User2]
+        adminUsers: [Admin,Admin2]
+        order:  [OrdererOrg]
+        channelID: mychannel
+        channelConfig:  fixtures/fabric/v1.4/channel
